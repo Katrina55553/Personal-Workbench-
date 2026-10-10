@@ -25,7 +25,8 @@ interface DictionaryEditor {
 }
 
 export function SettingsPage() {
-  const { snapshot, problem } = useAppStore();
+  const { snapshot, problem, canWrite, pendingCount } = useAppStore();
+  const cloud = repository.mode === 'cloud';
   const { data } = snapshot;
   const { run, notify, confirm } = useUi();
   const [editor, setEditor] = useState<DictionaryEditor | null>(null);
@@ -33,9 +34,12 @@ export function SettingsPage() {
   const [type, setType] = useState<Category['type']>('expense');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [baseRevision, setBaseRevision] = useState(repository.revision);
   const fileInput = useRef<HTMLInputElement>(null);
   const [opener, setOpener] = useState<HTMLElement | null>(null);
   const open = (next: DictionaryEditor) => {
+    if (!canWrite) return;
+    setBaseRevision(repository.revision);
     setOpener(document.activeElement instanceof HTMLElement ? document.activeElement : null);
     setName(next.name);
     setType(next.type ?? 'expense');
@@ -72,10 +76,15 @@ export function SettingsPage() {
           <ShieldCheck size={23} />
         </span>
         <div>
-          <h2>数据留在你的浏览器</h2>
-          <p>无需登录。清理浏览器数据或更换电脑前，请先导出备份。</p>
+          <h2>{cloud ? '记录在各台电脑之间同步' : '数据留在你的浏览器'}</h2>
+          <p>
+            {cloud
+              ? '同一账号共享业务记录；番茄钟在各台电脑独立运行。断网时显示缓存，计时完成后自动补交。'
+              : '尚未配置云端。清理浏览器数据或更换电脑前，请先导出备份。'}
+          </p>
+          {pendingCount > 0 && <p>{pendingCount} 条计时完成记录已保存在本机，等待上传。</p>}
         </div>
-        <span className="badge green">仅本机存储</span>
+        <span className="badge green">{cloud ? '云端存储' : '仅本机存储'}</span>
       </div>
       <Card title="数据备份" icon={HardDrive} subtitle="JSON 格式">
         <div className={styles.backupGrid}>
@@ -83,11 +92,19 @@ export function SettingsPage() {
             <h3>保存一份安心</h3>
             <p>备份包含四个模块的数据、记账分类和自习科目。正在运行的计时不会写入备份。</p>
             <div className={styles.backupActions}>
-              <button className="button primary" onClick={exportData} disabled={!!problem}>
+              <button
+                className="button primary"
+                onClick={exportData}
+                disabled={!cloud && !!problem}
+              >
                 <Download size={16} />
                 导出备份
               </button>
-              <button className="button" onClick={() => fileInput.current?.click()}>
+              <button
+                className="button"
+                disabled={!canWrite}
+                onClick={() => fileInput.current?.click()}
+              >
                 <Upload size={16} />
                 导入备份
               </button>
@@ -106,12 +123,18 @@ export function SettingsPage() {
                       throw new Error('备份文件超过 20 MB，请选择工作台导出的 JSON 文件');
                     const backup = repository.validateBackup(await file.text());
                     const counts = backup.data;
+                    let importRevision = repository.revision;
                     confirm({
                       title: '导入数据备份',
-                      description: `备份包含 ${counts.todos.length} 项待办、${counts.habits.length} 个习惯、${counts.transactions.length} 笔收支、${counts.studyRecords.length} 条自习。确认后将替换当前全部数据和设置，并重置计时。建议先导出当前数据。`,
+                      description: `备份包含 ${counts.todos.length} 项待办、${counts.habits.length} 个习惯、${counts.transactions.length} 笔收支、${counts.studyRecords.length} 条自习。${cloud ? '确认后将替换云端全部数据和设置，并重置所有设备的计时及待提交记录。' : '确认后将替换当前全部数据和设置，并重置计时。'}建议先导出当前数据。`,
                       label: '确认替换',
                       action: async () => {
-                        await repository.import(backup);
+                        try {
+                          await repository.import(backup, importRevision);
+                        } catch (reason) {
+                          importRevision = repository.revision;
+                          throw reason;
+                        }
                       },
                     });
                   } catch (reason) {
@@ -120,9 +143,9 @@ export function SettingsPage() {
                 }}
               />
             </div>
-            {problem && (
+            {(problem || cloud) && (
               <div className={styles.recovery}>
-                <p>{problem}</p>
+                {problem && <p>{problem}</p>}
                 <button
                   className="button"
                   onClick={() => {
@@ -164,7 +187,11 @@ export function SettingsPage() {
           title="记账分类"
           icon={Tag}
           action={
-            <button className="text-button" onClick={() => open({ kind: 'category', name: '' })}>
+            <button
+              className="text-button"
+              disabled={!canWrite}
+              onClick={() => open({ kind: 'category', name: '' })}
+            >
               <Plus size={15} />
               新增分类
             </button>
@@ -187,6 +214,7 @@ export function SettingsPage() {
                       {!item.active && <small>已停用</small>}
                       <button
                         className="icon-button"
+                        disabled={!canWrite}
                         aria-label={`改名 ${item.type === 'income' ? '收入' : '支出'} ${item.name}`}
                         onClick={() =>
                           open({ kind: 'category', id: item.id, name: item.name, type: item.type })
@@ -196,6 +224,7 @@ export function SettingsPage() {
                       </button>
                       <button
                         className="text-button"
+                        disabled={!canWrite}
                         onClick={() => toggle('category', item.id)}
                         aria-label={`${item.active ? '停用' : '启用'} ${item.type === 'income' ? '收入' : '支出'} ${item.name}`}
                       >
@@ -211,7 +240,11 @@ export function SettingsPage() {
           title="自习科目"
           icon={BookOpen}
           action={
-            <button className="text-button" onClick={() => open({ kind: 'subject', name: '' })}>
+            <button
+              className="text-button"
+              disabled={!canWrite}
+              onClick={() => open({ kind: 'subject', name: '' })}
+            >
               <Plus size={15} />
               新增科目
             </button>
@@ -227,12 +260,17 @@ export function SettingsPage() {
                 {!item.active && <small>已停用</small>}
                 <button
                   className="icon-button"
+                  disabled={!canWrite}
                   aria-label={`改名科目 ${item.name}`}
                   onClick={() => open({ kind: 'subject', id: item.id, name: item.name })}
                 >
                   <Pencil size={14} />
                 </button>
-                <button className="text-button" onClick={() => toggle('subject', item.id)}>
+                <button
+                  className="text-button"
+                  disabled={!canWrite}
+                  onClick={() => toggle('subject', item.id)}
+                >
                   {item.active ? '停用' : '启用'}
                 </button>
               </div>
@@ -291,10 +329,11 @@ export function SettingsPage() {
                       name: name.trim(),
                       active: true,
                     });
-                });
+                }, baseRevision);
                 setEditor(null);
                 notify('设置已保存');
               } catch (reason) {
+                setBaseRevision(repository.revision);
                 setError(reason instanceof Error ? reason.message : '保存失败');
               } finally {
                 setBusy(false);

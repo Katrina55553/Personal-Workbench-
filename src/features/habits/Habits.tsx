@@ -25,6 +25,7 @@ export function HabitTable({
   dayCount?: number;
   compact?: boolean;
 }) {
+  const canWrite = useAppStore((state) => state.canWrite);
   const today = useToday();
   const days = Array.from({ length: dayCount }, (_, i) => addDays(today, -i));
   const { run, edit, confirm } = useUi();
@@ -70,7 +71,11 @@ export function HabitTable({
           {items.map((item) => (
             <tr key={item.id}>
               <td>
-                <button className={styles.habitTitle} onClick={() => edit({ kind: 'habit', item })}>
+                <button
+                  className={styles.habitTitle}
+                  disabled={!canWrite}
+                  onClick={() => edit({ kind: 'habit', item })}
+                >
                   <span className={styles.habitDot} />
                   {item.title}
                 </button>
@@ -90,6 +95,7 @@ export function HabitTable({
                   <div className="row-actions">
                     <button
                       className="icon-button"
+                      disabled={!canWrite}
                       aria-label={`编辑 ${item.title}`}
                       onClick={() => edit({ kind: 'habit', item })}
                     >
@@ -97,6 +103,7 @@ export function HabitTable({
                     </button>
                     <button
                       className="icon-button danger"
+                      disabled={!canWrite}
                       aria-label={`删除 ${item.title}`}
                       onClick={() =>
                         confirm({
@@ -123,7 +130,7 @@ export function HabitTable({
                     className={`${styles.habitCheck} ${item.log[day] ? styles.habitOn : ''}`}
                     aria-label={`${item.title} ${day} ${item.log[day] ? '撤销打卡' : '打卡'}`}
                     aria-pressed={!!item.log[day]}
-                    disabled={day > today}
+                    disabled={day > today || !canWrite}
                     onClick={() => toggle(item.id, day)}
                   >
                     {item.log[day] ? <Check size={15} strokeWidth={2.8} /> : <span />}

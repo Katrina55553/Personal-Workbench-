@@ -1,0 +1,32 @@
+.container {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 32px;
+}
+.card {
+  width: min(100%, 420px);
+  padding: 32px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+.card h1 {
+  font-size: 24px;
+  margin-bottom: 12px;
+}
+.card p {
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+.card button {
+  width: 100%;
+}
+.card small {
+  display: block;
+  margin-top: 20px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}

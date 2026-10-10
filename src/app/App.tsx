@@ -12,6 +12,9 @@ import {
   HardDrive,
   Moon,
   Sun,
+  Cloud,
+  RefreshCw,
+  LogOut,
 } from 'lucide-react';
 import { DashboardPage } from '../features/dashboard/Dashboard';
 import { TodosPage } from '../features/todos/Todos';
@@ -21,7 +24,10 @@ import { StudyPage } from '../features/study/Study';
 import { SettingsPage } from '../features/settings/Settings';
 import { TimerController } from '../features/study/Timer';
 import { UiProvider } from '../shared/UiProvider';
-import { useAppStore } from '../data/store';
+import { repository, useAppStore } from '../data/store';
+import { cloudClient } from '../data/cloud-client';
+import { CloudRepository } from '../data/cloud-repository';
+import { AuthGate } from '../features/auth/AuthGate';
 import { useToday } from '../shared/hooks';
 import { useTheme } from '../shared/theme';
 import { useUi } from '../shared/ui-context';
@@ -30,6 +36,8 @@ import styles from './App.module.css';
 function WorkbenchLayout() {
   const location = useLocation();
   const problem = useAppStore((state) => state.problem);
+  const syncStatus = useAppStore((state) => state.syncStatus);
+  const pendingCount = useAppStore((state) => state.pendingCount);
   const today = useToday();
   const { theme, toggleTheme } = useTheme();
   const { notify } = useUi();
@@ -99,11 +107,33 @@ function WorkbenchLayout() {
             <Settings2 size={19} />
             <span>设置与备份</span>
           </NavLink>
-          <div className={styles.localStatus}>
+          <div className={styles.localStatus} role="status">
             <span />
-            <HardDrive size={12} />
-            数据保存在本机
+            {repository.mode === 'cloud' ? <Cloud size={12} /> : <HardDrive size={12} />}
+            {
+              {
+                local: '数据保存在本机',
+                loading: '正在加载云端数据',
+                saving: '正在保存',
+                synced: '云端已同步',
+                offline: '离线 · 仅供查看',
+                error: '同步失败 · 仅供查看',
+              }[syncStatus]
+            }
           </div>
+          {pendingCount > 0 && (
+            <div className={styles.localStatus}>{pendingCount} 条计时记录待上传</div>
+          )}
+          {repository instanceof CloudRepository && (
+            <button
+              className="text-button"
+              onClick={() => {
+                if (repository instanceof CloudRepository) void repository.refresh();
+              }}
+            >
+              <RefreshCw size={12} /> 重试同步
+            </button>
+          )}
         </div>
       </aside>
       <div className={styles.workspace}>
@@ -128,6 +158,20 @@ function WorkbenchLayout() {
               {theme === 'light' ? <Moon size={15} /> : <Sun size={15} />}
               <span>{theme === 'light' ? '暗色模式' : '亮色模式'}</span>
             </button>
+            {cloudClient && (
+              <button
+                type="button"
+                className={styles.themeToggle}
+                onClick={() => {
+                  void cloudClient?.auth.signOut({ scope: 'local' }).then(({ error }) => {
+                    if (error) notify('退出失败，请重试', true);
+                  });
+                }}
+              >
+                <LogOut size={15} />
+                退出登录
+              </button>
+            )}
           </div>
         </div>
         <main id="main" tabIndex={-1} className={styles.main}>
@@ -136,15 +180,17 @@ function WorkbenchLayout() {
               {problem} <a href="#/settings">打开数据恢复</a>
             </div>
           )}
-          <Routes>
-            <Route path="/" element={<DashboardPage />} />
-            <Route path="/todos" element={<TodosPage />} />
-            <Route path="/habits" element={<HabitsPage />} />
-            <Route path="/finance" element={<FinancePage />} />
-            <Route path="/study" element={<StudyPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+          <fieldset className={styles.businessArea}>
+            <Routes>
+              <Route path="/" element={<DashboardPage />} />
+              <Route path="/todos" element={<TodosPage />} />
+              <Route path="/habits" element={<HabitsPage />} />
+              <Route path="/finance" element={<FinancePage />} />
+              <Route path="/study" element={<StudyPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </fieldset>
           <footer className={styles.footer}>
             <span>我的工作台 · 给日常留一点秩序</span>
             <span>一点记录，一点进步。</span>
@@ -159,9 +205,11 @@ function WorkbenchLayout() {
 export function App() {
   return (
     <HashRouter>
-      <UiProvider>
-        <WorkbenchLayout />
-      </UiProvider>
+      <AuthGate>
+        <UiProvider>
+          <WorkbenchLayout />
+        </UiProvider>
+      </AuthGate>
     </HashRouter>
   );
 }

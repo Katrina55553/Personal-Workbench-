@@ -26,3 +26,25 @@ jobs:
           name: playwright-results
           path: test-results/
           retention-days: 7
+  cloud-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      TZ: Asia/Shanghai
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - run: npm ci
+      - run: supabase start
+      - run: npm run configure:cloud-test
+      - run: npm run build:cloud-test
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:cloud
+      - run: supabase stop --no-backup
+        if: always()

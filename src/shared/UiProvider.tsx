@@ -6,6 +6,7 @@ import { UiContext } from './ui-context';
 import type { ConfirmRequest, EditorRequest } from './ui-context';
 import { RecordEditor } from '../features/RecordEditor';
 import styles from './ui.module.css';
+import { repository } from '../data/store';
 
 export function UiProvider({ children }: { children: ReactNode }) {
   const [editor, setEditor] = useState<EditorRequest | null>(null);
@@ -38,9 +39,24 @@ export function UiProvider({ children }: { children: ReactNode }) {
     setEditor(request);
   };
   const confirm = (request: ConfirmRequest) => {
+    let revision = repository.revision;
     setOpener(document.activeElement instanceof HTMLElement ? document.activeElement : null);
     setError('');
-    setConfirmation(request);
+    setConfirmation({
+      ...request,
+      action: async () => {
+        if (revision !== repository.revision) {
+          revision = repository.revision;
+          throw new Error('数据已在其他电脑或页面改变，请检查最新数据后重新确认');
+        }
+        try {
+          await request.action();
+        } catch (reason) {
+          revision = repository.revision;
+          throw reason;
+        }
+      },
+    });
   };
   return (
     <UiContext.Provider value={{ edit, confirm, notify, run }}>

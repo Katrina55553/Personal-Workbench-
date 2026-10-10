@@ -3,6 +3,7 @@ import { Plus, X, ArrowUpRight, Inbox } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 import styles from './ui.module.css';
+import { useAppStore } from '../data/store';
 
 export function Modal({
   title,
@@ -77,8 +78,9 @@ export function NewButton({
   children?: ReactNode;
   onClick: () => void;
 }) {
+  const canWrite = useAppStore((state) => state.canWrite);
   return (
-    <button className="button primary" onClick={onClick}>
+    <button className="button primary" disabled={!canWrite} onClick={onClick}>
       <Plus size={17} />
       {children}
     </button>
@@ -202,12 +204,13 @@ export function FormActions({
   busy?: boolean;
   label?: string;
 }) {
+  const canWrite = useAppStore((state) => state.canWrite);
   return (
     <div className={styles.formActions}>
       <button type="button" className="button" onClick={onCancel} disabled={busy}>
         取消
       </button>
-      <button className="button primary" type="submit" disabled={busy}>
+      <button className="button primary" type="submit" disabled={busy || !canWrite}>
         {busy ? '保存中…' : label}
       </button>
     </div>

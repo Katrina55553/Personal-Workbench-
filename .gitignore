@@ -9,4 +9,7 @@ test-results/
 .env.*
 !.env.example
 *.log
+.npm-cache/
+supabase/.temp/
+supabase/.branches/
 .DS_Store

@@ -14,6 +14,7 @@ import { useUi } from '../../shared/ui-context';
 import styles from '../features.module.css';
 
 export function TodoList({ items, compact = false }: { items: Todo[]; compact?: boolean }) {
+  const canWrite = useAppStore((state) => state.canWrite);
   const { edit, confirm, run } = useUi();
   const ordered = [...items].sort(
     (a, b) => Number(b.pinned) - Number(a.pinned) || b.createdAt - a.createdAt,
@@ -28,6 +29,7 @@ export function TodoList({ items, compact = false }: { items: Todo[]; compact?: 
         >
           <button
             className={`${styles.checkbox} ${item.done ? styles.checked : ''}`}
+            disabled={!canWrite}
             aria-label={`${item.done ? '取消完成' : '完成'} ${item.title}`}
             aria-pressed={item.done}
             onClick={() =>
@@ -44,7 +46,11 @@ export function TodoList({ items, compact = false }: { items: Todo[]; compact?: 
           >
             {item.done && <Check size={13} strokeWidth={3} />}
           </button>
-          <button className={styles.recordTitle} onClick={() => edit({ kind: 'todo', item })}>
+          <button
+            className={styles.recordTitle}
+            disabled={!canWrite}
+            onClick={() => edit({ kind: 'todo', item })}
+          >
             <span>{item.title}</span>
             {!compact && item.note && <small>{item.note}</small>}
           </button>
@@ -55,6 +61,7 @@ export function TodoList({ items, compact = false }: { items: Todo[]; compact?: 
           </span>
           <button
             className={`icon-button ${item.pinned ? styles.pinned : ''}`}
+            disabled={!canWrite}
             aria-label={`${item.pinned ? '取消置顶' : '置顶'} ${item.title}`}
             aria-pressed={item.pinned}
             onClick={() =>
@@ -72,6 +79,7 @@ export function TodoList({ items, compact = false }: { items: Todo[]; compact?: 
             <>
               <button
                 className="icon-button"
+                disabled={!canWrite}
                 aria-label={`编辑 ${item.title}`}
                 onClick={() => edit({ kind: 'todo', item })}
               >
@@ -79,6 +87,7 @@ export function TodoList({ items, compact = false }: { items: Todo[]; compact?: 
               </button>
               <button
                 className="icon-button danger"
+                disabled={!canWrite}
                 aria-label={`删除 ${item.title}`}
                 onClick={() =>
                   confirm({

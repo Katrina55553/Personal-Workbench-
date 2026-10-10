@@ -187,6 +187,12 @@
 .storageWarning a {
   text-decoration: underline;
 }
+.businessArea {
+  border: 0;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+}
 .skipLink {
   position: fixed;
   top: -60px;

@@ -54,6 +54,7 @@ export function RecordEditor({
   );
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [baseRevision, setBaseRevision] = useState(repository.revision);
   const categories = data.categories.filter(
     (category) =>
       category.type === type &&
@@ -156,10 +157,11 @@ export function RecordEditor({
                 if (index < 0) draft.data.studyRecords.unshift(record);
                 else draft.data.studyRecords[index] = record;
               }
-            });
+            }, baseRevision);
             notify('记录已保存');
             onClose();
           } catch (reason) {
+            setBaseRevision(repository.revision);
             setError(reason instanceof Error ? reason.message : '保存失败');
           } finally {
             setBusy(false);

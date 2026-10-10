@@ -45,6 +45,7 @@ export function StudyChart() {
 }
 
 export function StudyPage() {
+  const canWrite = useAppStore((state) => state.canWrite);
   const data = useAppStore((state) => state.snapshot.data);
   const today = useToday();
   const stats = studyStats(data.studyRecords, today);
@@ -142,6 +143,7 @@ export function StudyPage() {
                     <div className="row-actions">
                       <button
                         className="icon-button"
+                        disabled={!canWrite}
                         aria-label={`编辑 ${item.title}`}
                         onClick={() => edit({ kind: 'study', item })}
                       >
@@ -149,6 +151,7 @@ export function StudyPage() {
                       </button>
                       <button
                         className="icon-button danger"
+                        disabled={!canWrite}
                         aria-label={`删除 ${item.title}`}
                         onClick={() =>
                           confirm({

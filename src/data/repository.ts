@@ -1,12 +1,19 @@
 import { backupSchema, snapshotSchema } from './schema';
 import type { Backup, Snapshot } from './schema';
 import { createInitialSnapshot, newTimer } from './defaults';
+import { settleTimer } from './timer';
+import type { SyncStatus } from './cloud-schema';
 
 export const STORAGE_KEY = 'personal-workbench-v1';
 type StorageProvider = () => Pick<Storage, 'getItem' | 'setItem'>;
 type Listener = (snapshot: Snapshot, problem: string | null) => void;
 
 export class Repository {
+  readonly mode = 'local' as const;
+  readonly status: SyncStatus = 'local';
+  readonly revision = 0;
+  readonly pendingCount = 0;
+  readonly canWrite = true;
   private snapshot = createInitialSnapshot();
   private listeners = new Set<Listener>();
   private blocked = false;
@@ -49,7 +56,9 @@ export class Repository {
     return next;
   }
 
-  async update(change: (draft: Snapshot) => void): Promise<Snapshot> {
+  async update(change: (draft: Snapshot) => void, expectedRevision?: number): Promise<Snapshot> {
+    if (expectedRevision !== undefined && expectedRevision !== this.revision)
+      throw new Error('数据版本已改变，请重新操作');
     const commit = () => {
       const current = this.read();
       if (this.blocked) throw new Error(this.problem ?? '无法保存数据');
@@ -60,6 +69,18 @@ export class Repository {
     if (typeof navigator !== 'undefined' && navigator.locks)
       return navigator.locks.request(STORAGE_KEY, commit);
     return commit();
+  }
+
+  updateTimer(change: (draft: Snapshot) => void): Promise<Snapshot> {
+    return this.update(change);
+  }
+
+  async settle(now: number): Promise<'focus' | 'break' | null> {
+    let phase: 'focus' | 'break' | null = null;
+    await this.update((draft) => {
+      phase = settleTimer(draft, now);
+    });
+    return phase;
   }
 
   subscribe(listener: Listener): () => void {
@@ -100,7 +121,9 @@ export class Repository {
       throw new Error('备份无效：请检查文件版本、记录字段及分类和科目引用。当前数据未改变。');
     }
   }
-  async import(backup: Backup): Promise<Snapshot> {
+  async import(backup: Backup, expectedRevision?: number): Promise<Snapshot> {
+    if (expectedRevision !== undefined && expectedRevision !== this.revision)
+      throw new Error('数据版本已改变，请重新操作');
     const commit = () =>
       this.write({
         version: 1,

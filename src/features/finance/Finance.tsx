@@ -25,6 +25,7 @@ import { financeStats, money } from './stats';
 import styles from '../features.module.css';
 
 export function FinancePage() {
+  const canWrite = useAppStore((state) => state.canWrite);
   const data = useAppStore((state) => state.snapshot.data);
   const today = useToday();
   const [monthOverride, setMonth] = useState<string | null>(null);
@@ -191,6 +192,7 @@ export function FinancePage() {
                         <div className="row-actions">
                           <button
                             className="icon-button"
+                            disabled={!canWrite}
                             aria-label={`编辑 ${item.title}`}
                             onClick={() => edit({ kind: 'finance', item })}
                           >
@@ -198,6 +200,7 @@ export function FinancePage() {
                           </button>
                           <button
                             className="icon-button danger"
+                            disabled={!canWrite}
                             aria-label={`删除 ${item.title}`}
                             onClick={() =>
                               confirm({

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { Pause, Play, RotateCcw, Coffee, Focus } from 'lucide-react';
 import { useAppStore, repository } from '../../data/store';
 import { newTimer } from '../../data/defaults';
-import { settleTimer } from '../../data/timer';
 import { useUi } from '../../shared/ui-context';
 import styles from '../features.module.css';
 
@@ -19,11 +18,13 @@ export function TimerController() {
       busy = true;
       let settled: 'focus' | 'break' | null = null;
       try {
-        await repository.update((draft) => {
-          settled = settleTimer(draft, Date.now());
-        });
+        settled = await repository.settle(Date.now());
         if (settled === 'focus')
-          notify('专注完成，已记录 25 分钟自习。休息已准备好，点击开始即可。');
+          notify(
+            repository.mode === 'cloud'
+              ? '专注完成，25 分钟记录已保存在本机，将自动上传。休息已准备好。'
+              : '专注完成，已记录 25 分钟自习。休息已准备好，点击开始即可。',
+          );
         else if (settled === 'break') notify('休息结束，下一轮专注已准备好。');
       } catch (reason) {
         failed = true;
@@ -50,6 +51,7 @@ export function TimerController() {
 }
 
 export function TimerCard() {
+  const canWrite = useAppStore((state) => state.canWrite);
   const { timer, data } = useAppStore((state) => state.snapshot);
   const { run, confirm } = useUi();
   const [now, setNow] = useState(Date.now);
@@ -70,11 +72,12 @@ export function TimerCard() {
   );
   const subjectId = timer.subjectId ?? subjects.find((subject) => subject.active)?.id ?? '';
   const toggle = () =>
-    void run(() =>
-      repository.update((draft) => {
+    void run(async () => {
+      if (await repository.settle(Date.now())) return;
+      return repository.updateTimer((draft) => {
         const time = Date.now();
-        if (settleTimer(draft, time)) return;
         const state = draft.timer;
+        if (state.status === 'running' && state.deadline !== null && state.deadline <= time) return;
         if (state.status === 'running') {
           state.remainingMs = Math.max(0, (state.deadline ?? time) - time);
           state.deadline = null;
@@ -94,12 +97,12 @@ export function TimerCard() {
           state.deadline = time + state.remainingMs;
           state.status = 'running';
         }
-      }),
-    );
+      });
+    });
   const reset = () => {
     const action = async () => {
-      await repository.update((draft) => {
-        settleTimer(draft, Date.now());
+      await repository.settle(Date.now());
+      await repository.updateTimer((draft) => {
         draft.timer = { ...newTimer(), subjectId: draft.timer.subjectId };
       });
     };
@@ -163,10 +166,10 @@ export function TimerCard() {
         <select
           aria-label="计时科目"
           value={subjectId}
-          disabled={timer.status !== 'ready'}
+          disabled={timer.status !== 'ready' || !canWrite}
           onChange={(event) =>
             void run(() =>
-              repository.update((draft) => {
+              repository.updateTimer((draft) => {
                 draft.timer.subjectId = event.target.value || null;
               }),
             )
@@ -182,7 +185,12 @@ export function TimerCard() {
         </select>
       </label>
       <div className={styles.timerControls}>
-        <button onClick={toggle} disabled={timer.phase === 'focus' && !subjectId}>
+        <button
+          onClick={toggle}
+          disabled={
+            (!canWrite && timer.status !== 'running') || (timer.phase === 'focus' && !subjectId)
+          }
+        >
           <span>
             {timer.status === 'running' ? <Pause size={16} /> : <Play size={16} />}
             {timer.status === 'running'

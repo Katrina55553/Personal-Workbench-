@@ -6,3 +6,6 @@ test-results
 package-lock.json
 workbench-desktop.html
 assets
+.npm-cache
+supabase/.temp
+supabase/.branches
