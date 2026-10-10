@@ -151,9 +151,9 @@ export function DashboardPage() {
               />
             )}
           </Card>
-          <Card title="本周习惯" icon={Leaf} action={<ViewLink to="/habits" />}>
+          <Card title="习惯打卡" subtitle="近七天" icon={Leaf} action={<ViewLink to="/habits" />}>
             {data.habits.length ? (
-              <HabitTable items={data.habits.slice(0, 5)} date={today} compact />
+              <HabitTable items={data.habits.slice(0, 5)} dayCount={7} compact />
             ) : (
               <EmptyState
                 title="小小的坚持，从今天开始"

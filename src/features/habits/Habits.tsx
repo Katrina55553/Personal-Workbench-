@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Check, ChevronLeft, ChevronRight, Flame, Leaf, Pencil, Trash2 } from 'lucide-react';
+import { Check, Flame, Leaf, Pencil, Trash2 } from 'lucide-react';
 import { useAppStore, repository } from '../../data/store';
 import type { Habit } from '../../data/schema';
-import { addDays, shortDate, weekDates } from '../../shared/date';
+import { addDays, shortDate } from '../../shared/date';
 import { useToday } from '../../shared/hooks';
 import {
   Card,
@@ -18,15 +18,15 @@ import styles from '../features.module.css';
 
 export function HabitTable({
   items,
-  date,
+  dayCount = 14,
   compact = false,
 }: {
   items: Habit[];
-  date: string;
+  dayCount?: number;
   compact?: boolean;
 }) {
   const today = useToday();
-  const days = weekDates(date);
+  const days = Array.from({ length: dayCount }, (_, i) => addDays(today, -i));
   const { run, edit, confirm } = useUi();
   const toggle = (id: string, day: string) =>
     void run(() =>
@@ -46,14 +46,24 @@ export function HabitTable({
         <thead>
           <tr>
             <th>习惯</th>
-            {days.map((day, i) => (
-              <th key={day} className={day === today ? styles.todayCol : ''}>
-                <span>{['一', '二', '三', '四', '五', '六', '日'][i]}</span>
-                <small>{day.slice(8)}</small>
-              </th>
-            ))}
             <th>连续</th>
             {!compact && <th>操作</th>}
+            {days.map((day) => (
+              <th
+                key={day}
+                className={`${styles.habitDate} ${day === today ? styles.todayCol : ''}`}
+                title={day}
+              >
+                <span>{`${Number(day.slice(5, 7))}/${Number(day.slice(8))}`}</span>
+                <small>
+                  {day === today
+                    ? '今天'
+                    : ['日', '一', '二', '三', '四', '五', '六'][
+                        new Date(`${day}T12:00:00`).getDay()
+                      ]}
+                </small>
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>
@@ -66,19 +76,6 @@ export function HabitTable({
                 </button>
                 {!compact && item.note && <small className={styles.cellNote}>{item.note}</small>}
               </td>
-              {days.map((day) => (
-                <td key={day} className={day === today ? styles.todayCol : ''}>
-                  <button
-                    className={`${styles.habitCheck} ${item.log[day] ? styles.habitOn : ''}`}
-                    aria-label={`${item.title} ${day} ${item.log[day] ? '撤销打卡' : '打卡'}`}
-                    aria-pressed={!!item.log[day]}
-                    disabled={day > today}
-                    onClick={() => toggle(item.id, day)}
-                  >
-                    {item.log[day] ? <Check size={15} strokeWidth={2.8} /> : <span />}
-                  </button>
-                </td>
-              ))}
               <td>
                 <span className={styles.streak}>
                   <Flame size={13} />
@@ -120,6 +117,19 @@ export function HabitTable({
                   </div>
                 </td>
               )}
+              {days.map((day) => (
+                <td key={day} className={day === today ? styles.todayCol : ''}>
+                  <button
+                    className={`${styles.habitCheck} ${item.log[day] ? styles.habitOn : ''}`}
+                    aria-label={`${item.title} ${day} ${item.log[day] ? '撤销打卡' : '打卡'}`}
+                    aria-pressed={!!item.log[day]}
+                    disabled={day > today}
+                    onClick={() => toggle(item.id, day)}
+                  >
+                    {item.log[day] ? <Check size={15} strokeWidth={2.8} /> : <span />}
+                  </button>
+                </td>
+              ))}
             </tr>
           ))}
         </tbody>
@@ -131,9 +141,8 @@ export function HabitTable({
 export function HabitsPage() {
   const habits = useAppStore((state) => state.snapshot.data.habits);
   const today = useToday();
-  const [offset, setOffset] = useState(0);
+  const [dayCount, setDayCount] = useState(14);
   const [query, setQuery] = useState('');
-  const days = weekDates(addDays(today, offset * 7));
   const { edit } = useUi();
   const completed = habits.filter((item) => item.log[today]).length;
   const q = query.trim().toLocaleLowerCase();
@@ -170,37 +179,20 @@ export function HabitsPage() {
           icon={Leaf}
         />
       </div>
-      <Card title="每周习惯追踪" subtitle="点击日期格即可打卡或撤销">
+      <Card title="习惯追踪" subtitle="从今天向前连续记录，点击日期格即可打卡或撤销">
         <div className="toolbar">
-          <div className={styles.weekSwitcher}>
-            <button
-              className="icon-button"
-              aria-label="上一周"
-              onClick={() => setOffset(offset - 1)}
-            >
-              <ChevronLeft size={17} />
+          <div className={styles.habitHistory}>
+            <span>
+              {shortDate(today)} · 近 {dayCount} 天
+            </span>
+            <button className="text-button" onClick={() => setDayCount((count) => count + 30)}>
+              查看更多日期
             </button>
-            <strong>
-              {shortDate(days[0] ?? today)} — {shortDate(days[6] ?? today)}
-            </strong>
-            <button
-              className="icon-button"
-              aria-label="下一周"
-              disabled={offset === 0}
-              onClick={() => setOffset(offset + 1)}
-            >
-              <ChevronRight size={17} />
-            </button>
-            {offset !== 0 && (
-              <button className="text-button" onClick={() => setOffset(0)}>
-                回到本周
-              </button>
-            )}
           </div>
           <SearchInput value={query} onChange={setQuery} />
         </div>
         {items.length ? (
-          <HabitTable items={items} date={days[0] ?? today} />
+          <HabitTable items={items} dayCount={dayCount} />
         ) : (
           <EmptyState
             title={query ? '没有匹配的习惯' : '从一个好习惯开始'}

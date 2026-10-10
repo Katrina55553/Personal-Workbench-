@@ -55,7 +55,7 @@ test('待办中文输入、优先级、置顶、搜索、编辑、完成、刷�
   await expect(newButton).toBeFocused();
 });
 
-test('习惯创建、当日打卡、撤销、历史补打与未来日期限制', async ({ page }) => {
+test('习惯连续日期展示、当日打卡、撤销与历史补打', async ({ page }) => {
   const today = localDate();
   const tomorrow = addDays(today, 1);
   await page.goto('/');
@@ -63,6 +63,23 @@ test('习惯创建、当日打卡、撤销、历史补打与未来日期限制',
   await page.getByRole('button', { name: '新建习惯' }).first().click();
   await page.getByLabel('习惯名称').fill('每天喝水');
   await page.getByRole('button', { name: '保存', exact: true }).click();
+  await expect(page.getByRole('button', { name: /每天喝水 .* 打卡$/ })).toHaveCount(14);
+  await expect(page.getByRole('button', { name: /上一周|下一周|回到本周/ })).toHaveCount(0);
+  const initialDays = Array.from({ length: 14 }, (_, i) => addDays(today, -i));
+  expect(
+    await page
+      .getByRole('button', { name: /每天喝水 .* 打卡$/ })
+      .evaluateAll((buttons) => buttons.map((button) => button.getAttribute('aria-label'))),
+  ).toEqual(initialDays.map((day) => `每天喝水 ${day} 打卡`));
+  await expect(
+    page.getByRole('button', { name: `每天喝水 ${addDays(today, -14)} 打卡`, exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByRole('columnheader', {
+      name: new RegExp(`^${Number(today.slice(5, 7))}/${Number(today.slice(8))} 今天$`),
+    }),
+  ).toBeVisible();
+  await page.screenshot({ path: 'test-results/habits-continuous.png', fullPage: true });
   await page.getByRole('button', { name: `每天喝水 ${today} 打卡`, exact: true }).click();
   await expect(page.getByRole('button', { name: `每天喝水 ${today} 撤销打卡` })).toBeVisible();
   await page.reload();
@@ -71,11 +88,31 @@ test('习惯创建、当日打卡、撤销、历史补打与未来日期限制',
     page.getByRole('button', { name: `每天喝水 ${today} 打卡`, exact: true }),
   ).toBeVisible();
   const future = page.getByRole('button', { name: `每天喝水 ${tomorrow} 打卡`, exact: true });
-  if (await future.count()) await expect(future).toBeDisabled();
-  await page.getByRole('button', { name: '上一周' }).click();
-  const historical = page.getByRole('button', { name: /每天喝水 .* 打卡$/ }).first();
+  await expect(future).toHaveCount(0);
+  await page.getByRole('button', { name: '查看更多日期' }).click();
+  await expect(page.getByRole('button', { name: /每天喝水 .* 打卡$/ })).toHaveCount(44);
+  const historyDay = addDays(today, -20);
+  const historical = page.getByRole('button', { name: `每天喝水 ${historyDay} 打卡`, exact: true });
   await historical.click();
-  await expect(page.getByRole('button', { name: /每天喝水 .* 撤销打卡$/ })).toHaveCount(1);
+  await expect(
+    page.getByRole('button', { name: `每天喝水 ${historyDay} 撤销打卡`, exact: true }),
+  ).toHaveAttribute('aria-pressed', 'true');
+  expect((await read(page)).data.habits[0]?.log).toEqual({ [historyDay]: true });
+  await page.reload();
+  await page.getByRole('button', { name: '查看更多日期' }).click();
+  await expect(
+    page.getByRole('button', { name: `每天喝水 ${historyDay} 撤销打卡`, exact: true }),
+  ).toHaveAttribute('aria-pressed', 'true');
+  await navigate(page, '概览');
+  await expect(page.getByRole('heading', { name: '本周习惯', exact: true })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: /每天喝水 .* 打卡$/ })).toHaveCount(7);
+  await expect(
+    page.getByRole('button', { name: `每天喝水 ${today} 打卡`, exact: true }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole('button', { name: `每天喝水 ${addDays(today, -6)} 打卡`, exact: true }),
+  ).toBeVisible();
+  await navigate(page, '习惯打卡');
   await page.getByRole('button', { name: '编辑 每天喝水' }).click();
   await page.getByLabel('习惯名称').fill('每天八杯水');
   await page.getByRole('button', { name: '保存', exact: true }).click();
@@ -425,7 +462,7 @@ test.describe('跨日刷新', () => {
     await seed(page, snapshot);
     await expect(
       page.getByRole('button', { name: '夜间阅读 2026-10-11 打卡', exact: true }),
-    ).toBeDisabled();
+    ).toHaveCount(0);
     await page.clock.fastForward(3000);
     await expect(page.getByText('10月11日星期日', { exact: true })).toBeVisible();
     await expect(
