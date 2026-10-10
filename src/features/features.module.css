@@ -1,0 +1,698 @@
+.dashboardGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 310px;
+  gap: 24px;
+  align-items: start;
+}
+.dateChip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #e2e8f1;
+  background: #fafbfd;
+  padding: 9px 13px;
+  border-radius: 8px;
+  color: #8493a9;
+  font-size: 11px;
+}
+.welcomeStrip {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #8a9bb7;
+  padding: 0 2px;
+  margin: -3px 0 24px;
+  font-size: 11px;
+}
+.welcomeStrip > svg {
+  color: #bba272;
+}
+.welcomeCount {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #a7b2c3;
+  font-size: 10px;
+}
+.statSuffix {
+  color: #b4bece;
+  font-size: 19px;
+  font-weight: 400;
+}
+.todoList {
+  display: flex;
+  flex-direction: column;
+}
+.todoRow {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 15px 0;
+  border-bottom: 1px solid #f0f3f7;
+  min-height: 61px;
+}
+.todoRow:last-child {
+  border-bottom: none;
+}
+.checkbox {
+  height: 19px;
+  width: 19px;
+  min-width: 19px;
+  border: 1.5px solid #d9e0ec;
+  background: white;
+  border-radius: 5px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: white;
+}
+.checkbox:hover {
+  border-color: #6384c9;
+}
+.checked {
+  background: #86b5a0;
+  border-color: #86b5a0;
+}
+.recordTitle {
+  padding: 0;
+  background: none;
+  text-align: left;
+  flex: 1;
+  min-width: 0;
+}
+.recordTitle > span {
+  display: block;
+  font-size: 12px;
+  color: #5d6c83;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.recordTitle > small {
+  display: block;
+  color: #a8b2c1;
+  margin-top: 3px;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10px;
+}
+.completed .recordTitle > span {
+  text-decoration: line-through;
+  color: #aeb9c9;
+}
+.pinned {
+  color: #6484c4;
+  background: #eef3fd;
+}
+.tableScroll {
+  overflow-x: auto;
+}
+.habitTable,
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+.habitTable th {
+  font-size: 10px;
+  font-weight: 500;
+  color: #93a2b8;
+  padding: 9px 5px 12px;
+  text-align: center;
+}
+.habitTable th:first-child {
+  text-align: left;
+  min-width: 125px;
+}
+.habitTable th span,
+.habitTable th small {
+  display: block;
+}
+.habitTable th small {
+  font-size: 9px;
+  color: #b1bcce;
+  margin-top: 2px;
+}
+.habitTable td {
+  padding: 13px 4px;
+  text-align: center;
+  border-top: 1px solid #f0f3f7;
+}
+.habitTable td:first-child {
+  text-align: left;
+  max-width: 200px;
+}
+.todayCol {
+  background: #f7f9fe;
+}
+.habitTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+  background: none;
+  padding: 0;
+  font-size: 11px;
+  color: #7a8ca5;
+  overflow-wrap: anywhere;
+}
+.habitDot {
+  width: 5px;
+  height: 5px;
+  background: #81aa98;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.habitCheck {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: #f3f6fa;
+  padding: 0;
+  color: #7fab99;
+}
+.habitCheck:hover:not(:disabled) {
+  background: #e5efe9;
+}
+.habitCheck:disabled {
+  background: #f8f9fb;
+}
+.habitCheck > span {
+  width: 4px;
+  height: 4px;
+  background: #dce3ee;
+  border-radius: 50%;
+}
+.habitOn {
+  background: #eaf4ed;
+}
+.streak {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  white-space: nowrap;
+  color: #b9a074;
+  font-size: 10px;
+}
+.cellNote {
+  display: block;
+  color: #a9b4c4;
+  font-size: 9px;
+  margin-top: 3px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.weekSwitcher {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.weekSwitcher strong {
+  color: #7b8ba4;
+  font-size: 11px;
+  font-weight: 500;
+}
+.weekSwitcher input {
+  width: 129px;
+  padding: 5px 6px;
+  border-color: #edf1f7;
+  font-size: 11px;
+}
+.dataTable th {
+  text-align: left;
+  color: #9aa8bb;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 10px 7px;
+  background: #fafbfd;
+}
+.dataTable td {
+  padding: 17px 7px;
+  border-bottom: 1px solid #f0f3f7;
+}
+.dataTable tr:last-child td {
+  border-bottom: none;
+}
+.dataTable td strong {
+  font-size: 12px;
+  font-weight: 500;
+}
+.dataTable .alignRight {
+  text-align: right;
+  white-space: nowrap;
+}
+.transactionTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.transactionTitle > div {
+  min-width: 0;
+}
+.transactionTitle small {
+  display: block;
+  color: #acb6c5;
+  font-size: 10px;
+  margin-top: 3px;
+  overflow-wrap: anywhere;
+  max-width: 240px;
+}
+.flowIcon {
+  display: grid;
+  place-items: center;
+  width: 33px;
+  height: 33px;
+  border-radius: 9px;
+  background: #f9f3e9;
+  color: #b9a279;
+  flex-shrink: 0;
+}
+.income {
+  background: #edf7f1;
+  color: #7eab96;
+}
+.incomeAmount {
+  color: #77a58f;
+}
+.sideTip {
+  padding: 18px 0 0;
+  border-top: 1px solid var(--border);
+  margin-top: 22px;
+  color: #a4afc0;
+  font-size: 10px;
+  line-height: 1.9;
+}
+.timerCard {
+  background: linear-gradient(135deg, #334a70, #283b5e);
+  color: #fff;
+  border-radius: 13px;
+  padding: 22px 25px;
+  box-shadow: 0 8px 25px #2d416611;
+}
+.timerHeading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.timerHeading > span:first-child {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  font-weight: 500;
+  font-size: 13px;
+  color: #dce6f8;
+}
+.timerBadge {
+  font-size: 9px;
+  color: #aebfdb;
+  background: #ffffff0d;
+  border: 1px solid #ffffff0b;
+  padding: 3px 8px;
+  border-radius: 5px;
+  letter-spacing: 1px;
+}
+.timerDial {
+  width: 177px;
+  height: 177px;
+  margin: 18px auto 16px;
+  position: relative;
+}
+.timerDial svg {
+  width: 100%;
+  height: 100%;
+}
+.timerDial > div {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.timerDial strong {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+  font-size: 39px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  line-height: 1.5;
+}
+.timerDial span {
+  font-size: 9px;
+  color: #91a5c6;
+}
+.timerSubject {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #9daecd;
+  margin-bottom: 14px;
+}
+.timerSubject select {
+  background: #ffffff08;
+  color: #d2def4;
+  border: 1px solid #ffffff12;
+  border-radius: 6px;
+  padding: 6px 8px;
+  width: 130px;
+  font-size: 10px;
+}
+.timerSubject option {
+  background: #2f456b;
+}
+.timerControls {
+  display: flex;
+  gap: 9px;
+}
+.timerControls button {
+  border: 1px solid #ffffff15;
+  background: #ffffff06;
+  color: #a8bcdc;
+  border-radius: 7px;
+  display: grid;
+  place-items: center;
+  padding: 9px 13px;
+}
+.timerControls button:first-child {
+  background: #c1d1f3;
+  border-color: #c1d1f3;
+  color: #2c4268;
+  flex: 1;
+  font-size: 12px;
+  font-weight: 600;
+}
+.timerControls button > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.timerControls button:hover {
+  filter: brightness(1.08);
+}
+.timerCard > p {
+  font-size: 9px;
+  color: #879cbd;
+  text-align: center;
+  margin-top: 14px;
+}
+.quickGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.quickButton {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 9px 8px;
+  border-radius: 8px;
+  background: #fff;
+  text-align: left;
+}
+.quickButton:hover {
+  background: #f7f9fc;
+}
+.quickButton > div {
+  flex: 1;
+}
+.quickButton strong {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  color: #687991;
+}
+.quickButton small {
+  display: block;
+  color: #acb6c6;
+  font-size: 9px;
+  margin-top: 2px;
+}
+.quickButton > svg {
+  color: #c6cfdd;
+}
+.quickIcon {
+  display: grid;
+  place-items: center;
+  width: 35px;
+  height: 35px;
+  border-radius: 9px;
+}
+.blue {
+  background: #edf2fd;
+  color: #7490cc;
+}
+.green {
+  background: #eef7f1;
+  color: #82ab98;
+}
+.amber {
+  background: #faf4ea;
+  color: #bca374;
+}
+.violet {
+  background: #f2eff9;
+  color: #a28fc3;
+}
+.studyChart {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 13px;
+  padding: 6px 9px 4px;
+}
+.chartColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+}
+.chartColumn > span {
+  color: #a2aec1;
+  font-size: 9px;
+  white-space: nowrap;
+}
+.chartBarArea {
+  height: 131px;
+  width: 100%;
+  max-width: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+}
+.chartValue {
+  font-size: 9px;
+  color: #91a5c8;
+}
+.chartBar {
+  width: 100%;
+  max-height: 115px;
+  border-radius: 5px 5px 2px 2px;
+  background: #e7edf9;
+  min-height: 3px;
+}
+.chartToday {
+  background: #819ed9;
+}
+.studyRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 17px 0;
+  border-bottom: 1px solid #f0f3f7;
+}
+.studyRow:last-child {
+  border-bottom: none;
+}
+.studyIcon {
+  background: #eff3fc;
+  color: #8ea4cf;
+  width: 37px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+}
+.studyMain {
+  flex: 1;
+  min-width: 0;
+}
+.studyMain h3 {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6a7990;
+  overflow-wrap: anywhere;
+}
+.studyMain p {
+  color: #a3afc0;
+  font-size: 11px;
+  margin-top: 5px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.studyMeta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #a4afc1;
+  font-size: 10px;
+  margin-top: 5px;
+  flex-wrap: wrap;
+}
+.studyMeta .badge {
+  font-size: 9px;
+}
+.studyDuration {
+  color: #849bc3;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.settingsIntro {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  background: #edf3fa;
+  border: 1px solid #e2eaf4;
+  border-radius: 12px;
+}
+.settingsIntro > span:first-child {
+  color: #859fbc;
+}
+.settingsIntro > div {
+  flex: 1;
+}
+.settingsIntro h2 {
+  font-size: 13px;
+  font-weight: 600;
+  color: #607b9e;
+}
+.settingsIntro p {
+  font-size: 11px;
+  color: #8ba0bb;
+  margin-top: 5px;
+}
+.backupGrid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 35px;
+}
+.backupGrid h3 {
+  font-size: 13px;
+  font-weight: 500;
+  color: #7889a2;
+  margin-bottom: 6px;
+}
+.backupGrid p {
+  font-size: 11px;
+  color: #a3afc1;
+  line-height: 1.9;
+}
+.backupActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+}
+.backupSummary {
+  display: flex;
+  align-items: center;
+  gap: 35px;
+  border-left: 1px solid var(--border);
+  padding-left: 35px;
+}
+.backupSummary > span {
+  font-size: 10px;
+  color: #a3afc1;
+}
+.backupSummary strong {
+  display: block;
+  font-size: 22px;
+  font-weight: 500;
+  color: #71839f;
+  margin-bottom: 6px;
+}
+.recovery {
+  border: 1px solid #ecd3b3;
+  background: #fff5e9;
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 16px;
+}
+.recovery p {
+  color: #9b753f;
+  margin-bottom: 10px;
+}
+.dictionary {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dictionaryGroup {
+  font-size: 10px;
+  font-weight: 500;
+  color: #a4b0c3;
+  margin: 8px 0;
+}
+.dictionaryRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 0;
+  border-bottom: 1px solid #f0f3f7;
+}
+.dictionaryRow > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+  color: #7a8aa3;
+  flex: 1;
+}
+.dictionaryRow > small {
+  color: #abb6c6;
+  font-size: 10px;
+}
+.dictionaryRow > button:last-child {
+  font-size: 10px;
+}
+.inactive > span {
+  color: #b6bfcd;
+}
+@media (min-width: 1600px) {
+  .dashboardGrid {
+    grid-template-columns: minmax(0, 1fr) 340px;
+  }
+}
+@media (max-width: 1200px) {
+  .dashboardGrid {
+    grid-template-columns: minmax(0, 1fr) 272px;
+    gap: 18px;
+  }
+  .habitTable th:first-child {
+    min-width: 100px;
+  }
+  .habitTable th {
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+  .habitCheck {
+    width: 22px;
+    height: 24px;
+  }
+  .timerCard {
+    padding: 21px;
+  }
+  .backupSummary {
+    gap: 20px;
+    padding-left: 20px;
+  }
+}
