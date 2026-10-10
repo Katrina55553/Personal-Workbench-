@@ -4,6 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f5f7fa" />
+    <script>
+      (() => {
+        let theme;
+        try {
+          theme = localStorage.getItem('personal-workbench-theme-v1');
+        } catch {
+          // Use the system appearance when browser storage is unavailable.
+        }
+        document.documentElement.dataset.theme =
+          theme === 'light' || theme === 'dark'
+            ? theme
+            : matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+      })();
+    </script>
     <meta
       name="description"
       content="管理待办、习惯、收支与自习的个人工作台。数据保存在你的浏览器。"

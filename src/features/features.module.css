@@ -8,35 +8,35 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid #e2e8f1;
-  background: #fafbfd;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-subtle);
   padding: 9px 13px;
   border-radius: 8px;
-  color: #8493a9;
+  color: var(--muted);
   font-size: 11px;
 }
 .welcomeStrip {
   display: flex;
   align-items: center;
   gap: 9px;
-  color: #8a9bb7;
+  color: var(--muted);
   padding: 0 2px;
   margin: -3px 0 24px;
   font-size: 11px;
 }
 .welcomeStrip > svg {
-  color: #bba272;
+  color: var(--amber);
 }
 .welcomeCount {
   margin-left: auto;
   display: flex;
   align-items: center;
   gap: 7px;
-  color: #a7b2c3;
+  color: var(--faint);
   font-size: 10px;
 }
 .statSuffix {
-  color: #b4bece;
+  color: var(--faint);
   font-size: 19px;
   font-weight: 400;
 }
@@ -49,7 +49,7 @@
   align-items: center;
   gap: 11px;
   padding: 15px 0;
-  border-bottom: 1px solid #f0f3f7;
+  border-bottom: 1px solid var(--border);
   min-height: 61px;
 }
 .todoRow:last-child {
@@ -59,20 +59,20 @@
   height: 19px;
   width: 19px;
   min-width: 19px;
-  border: 1.5px solid #d9e0ec;
-  background: white;
+  border: 1.5px solid var(--border-strong);
+  background: var(--surface);
   border-radius: 5px;
   display: grid;
   place-items: center;
   padding: 0;
-  color: white;
+  color: var(--on-primary);
 }
 .checkbox:hover {
-  border-color: #6384c9;
+  border-color: var(--primary);
 }
 .checked {
-  background: #86b5a0;
-  border-color: #86b5a0;
+  background: var(--green);
+  border-color: var(--green);
 }
 .recordTitle {
   padding: 0;
@@ -84,13 +84,13 @@
 .recordTitle > span {
   display: block;
   font-size: 12px;
-  color: #5d6c83;
+  color: var(--text-secondary);
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
 .recordTitle > small {
   display: block;
-  color: #a8b2c1;
+  color: var(--faint);
   margin-top: 3px;
   max-width: 100%;
   overflow: hidden;
@@ -100,11 +100,11 @@
 }
 .completed .recordTitle > span {
   text-decoration: line-through;
-  color: #aeb9c9;
+  color: var(--faint);
 }
 .pinned {
-  color: #6484c4;
-  background: #eef3fd;
+  color: var(--primary);
+  background: var(--primary-soft);
 }
 .tableScroll {
   overflow-x: auto;
@@ -118,7 +118,7 @@
 .habitTable th {
   font-size: 10px;
   font-weight: 500;
-  color: #93a2b8;
+  color: var(--muted);
   padding: 9px 5px 12px;
   text-align: center;
 }
@@ -132,20 +132,20 @@
 }
 .habitTable th small {
   font-size: 9px;
-  color: #b1bcce;
+  color: var(--faint);
   margin-top: 2px;
 }
 .habitTable td {
   padding: 13px 4px;
   text-align: center;
-  border-top: 1px solid #f0f3f7;
+  border-top: 1px solid var(--border);
 }
 .habitTable td:first-child {
   text-align: left;
   max-width: 200px;
 }
 .todayCol {
-  background: #f7f9fe;
+  background: var(--surface-hover);
 }
 .habitTitle {
   display: inline-flex;
@@ -155,13 +155,13 @@
   background: none;
   padding: 0;
   font-size: 11px;
-  color: #7a8ca5;
+  color: var(--text-secondary);
   overflow-wrap: anywhere;
 }
 .habitDot {
   width: 5px;
   height: 5px;
-  background: #81aa98;
+  background: var(--green);
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -172,36 +172,36 @@
   width: 26px;
   height: 26px;
   border-radius: 7px;
-  background: #f3f6fa;
+  background: var(--surface-muted);
   padding: 0;
-  color: #7fab99;
+  color: var(--green);
 }
 .habitCheck:hover:not(:disabled) {
-  background: #e5efe9;
+  background: var(--green-soft);
 }
 .habitCheck:disabled {
-  background: #f8f9fb;
+  background: var(--surface-subtle);
 }
 .habitCheck > span {
   width: 4px;
   height: 4px;
-  background: #dce3ee;
+  background: var(--decorative);
   border-radius: 50%;
 }
 .habitOn {
-  background: #eaf4ed;
+  background: var(--green-soft);
 }
 .streak {
   display: inline-flex;
   gap: 4px;
   align-items: center;
   white-space: nowrap;
-  color: #b9a074;
+  color: var(--amber);
   font-size: 10px;
 }
 .cellNote {
   display: block;
-  color: #a9b4c4;
+  color: var(--faint);
   font-size: 9px;
   margin-top: 3px;
   overflow: hidden;
@@ -214,27 +214,27 @@
   gap: 7px;
 }
 .weekSwitcher strong {
-  color: #7b8ba4;
+  color: var(--text-secondary);
   font-size: 11px;
   font-weight: 500;
 }
 .weekSwitcher input {
   width: 129px;
   padding: 5px 6px;
-  border-color: #edf1f7;
+  border-color: var(--border);
   font-size: 11px;
 }
 .dataTable th {
   text-align: left;
-  color: #9aa8bb;
+  color: var(--faint);
   font-size: 10px;
   font-weight: 500;
   padding: 10px 7px;
-  background: #fafbfd;
+  background: var(--surface-subtle);
 }
 .dataTable td {
   padding: 17px 7px;
-  border-bottom: 1px solid #f0f3f7;
+  border-bottom: 1px solid var(--border);
 }
 .dataTable tr:last-child td {
   border-bottom: none;
@@ -257,7 +257,7 @@
 }
 .transactionTitle small {
   display: block;
-  color: #acb6c5;
+  color: var(--faint);
   font-size: 10px;
   margin-top: 3px;
   overflow-wrap: anywhere;
@@ -269,28 +269,30 @@
   width: 33px;
   height: 33px;
   border-radius: 9px;
-  background: #f9f3e9;
-  color: #b9a279;
+  background: var(--amber-soft);
+  color: var(--amber);
   flex-shrink: 0;
 }
 .income {
-  background: #edf7f1;
-  color: #7eab96;
+  background: var(--green-soft);
+  color: var(--green);
 }
 .incomeAmount {
-  color: #77a58f;
+  color: var(--green);
 }
 .sideTip {
   padding: 18px 0 0;
   border-top: 1px solid var(--border);
   margin-top: 22px;
-  color: #a4afc0;
+  color: var(--faint);
   font-size: 10px;
   line-height: 1.9;
 }
 .timerCard {
-  background: linear-gradient(135deg, #334a70, #283b5e);
-  color: #fff;
+  background: linear-gradient(135deg, var(--timer-start), var(--timer-end));
+  color: var(--inverse-text);
+  color-scheme: dark;
+  border: 1px solid var(--timer-border);
   border-radius: 13px;
   padding: 22px 25px;
   box-shadow: 0 8px 25px #2d416611;
@@ -413,11 +415,11 @@
   align-items: center;
   padding: 9px 8px;
   border-radius: 8px;
-  background: #fff;
+  background: var(--surface);
   text-align: left;
 }
 .quickButton:hover {
-  background: #f7f9fc;
+  background: var(--surface-hover);
 }
 .quickButton > div {
   flex: 1;
@@ -426,16 +428,16 @@
   display: block;
   font-size: 11px;
   font-weight: 500;
-  color: #687991;
+  color: var(--text-secondary);
 }
 .quickButton small {
   display: block;
-  color: #acb6c6;
+  color: var(--faint);
   font-size: 9px;
   margin-top: 2px;
 }
 .quickButton > svg {
-  color: #c6cfdd;
+  color: var(--decorative);
 }
 .quickIcon {
   display: grid;
@@ -445,20 +447,20 @@
   border-radius: 9px;
 }
 .blue {
-  background: #edf2fd;
-  color: #7490cc;
+  background: var(--primary-soft);
+  color: var(--primary);
 }
 .green {
-  background: #eef7f1;
-  color: #82ab98;
+  background: var(--green-soft);
+  color: var(--green);
 }
 .amber {
-  background: #faf4ea;
-  color: #bca374;
+  background: var(--amber-soft);
+  color: var(--amber);
 }
 .violet {
-  background: #f2eff9;
-  color: #a28fc3;
+  background: var(--violet-soft);
+  color: var(--violet);
 }
 .studyChart {
   display: grid;
@@ -474,7 +476,7 @@
   min-width: 0;
 }
 .chartColumn > span {
-  color: #a2aec1;
+  color: var(--faint);
   font-size: 9px;
   white-space: nowrap;
 }
@@ -490,31 +492,31 @@
 }
 .chartValue {
   font-size: 9px;
-  color: #91a5c8;
+  color: var(--faint);
 }
 .chartBar {
   width: 100%;
   max-height: 115px;
   border-radius: 5px 5px 2px 2px;
-  background: #e7edf9;
+  background: var(--chart-bar);
   min-height: 3px;
 }
 .chartToday {
-  background: #819ed9;
+  background: var(--chart-active);
 }
 .studyRow {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 17px 0;
-  border-bottom: 1px solid #f0f3f7;
+  border-bottom: 1px solid var(--border);
 }
 .studyRow:last-child {
   border-bottom: none;
 }
 .studyIcon {
-  background: #eff3fc;
-  color: #8ea4cf;
+  background: var(--primary-soft);
+  color: var(--primary);
   width: 37px;
   height: 40px;
   display: grid;
@@ -528,11 +530,11 @@
 .studyMain h3 {
   font-size: 12px;
   font-weight: 500;
-  color: #6a7990;
+  color: var(--text-secondary);
   overflow-wrap: anywhere;
 }
 .studyMain p {
-  color: #a3afc0;
+  color: var(--faint);
   font-size: 11px;
   margin-top: 5px;
   white-space: pre-wrap;
@@ -542,7 +544,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #a4afc1;
+  color: var(--faint);
   font-size: 10px;
   margin-top: 5px;
   flex-wrap: wrap;
@@ -551,7 +553,7 @@
   font-size: 9px;
 }
 .studyDuration {
-  color: #849bc3;
+  color: var(--muted);
   font-size: 11px;
   font-weight: 500;
   white-space: nowrap;
@@ -562,12 +564,12 @@
   gap: 14px;
   padding: 20px 24px;
   margin-bottom: 24px;
-  background: #edf3fa;
-  border: 1px solid #e2eaf4;
+  background: var(--primary-soft);
+  border: 1px solid var(--border);
   border-radius: 12px;
 }
 .settingsIntro > span:first-child {
-  color: #859fbc;
+  color: var(--muted);
 }
 .settingsIntro > div {
   flex: 1;
@@ -575,11 +577,11 @@
 .settingsIntro h2 {
   font-size: 13px;
   font-weight: 600;
-  color: #607b9e;
+  color: var(--text-secondary);
 }
 .settingsIntro p {
   font-size: 11px;
-  color: #8ba0bb;
+  color: var(--muted);
   margin-top: 5px;
 }
 .backupGrid {
@@ -590,12 +592,12 @@
 .backupGrid h3 {
   font-size: 13px;
   font-weight: 500;
-  color: #7889a2;
+  color: var(--text-secondary);
   margin-bottom: 6px;
 }
 .backupGrid p {
   font-size: 11px;
-  color: #a3afc1;
+  color: var(--faint);
   line-height: 1.9;
 }
 .backupActions {
@@ -612,24 +614,24 @@
 }
 .backupSummary > span {
   font-size: 10px;
-  color: #a3afc1;
+  color: var(--faint);
 }
 .backupSummary strong {
   display: block;
   font-size: 22px;
   font-weight: 500;
-  color: #71839f;
+  color: var(--text-secondary);
   margin-bottom: 6px;
 }
 .recovery {
-  border: 1px solid #ecd3b3;
-  background: #fff5e9;
+  border: 1px solid var(--warning-border);
+  background: var(--warning-soft);
   padding: 12px;
   border-radius: 8px;
   margin-top: 16px;
 }
 .recovery p {
-  color: #9b753f;
+  color: var(--warning);
   margin-bottom: 10px;
 }
 .dictionary {
@@ -640,7 +642,7 @@
 .dictionaryGroup {
   font-size: 10px;
   font-weight: 500;
-  color: #a4b0c3;
+  color: var(--faint);
   margin: 8px 0;
 }
 .dictionaryRow {
@@ -648,24 +650,24 @@
   align-items: center;
   gap: 8px;
   padding: 9px 0;
-  border-bottom: 1px solid #f0f3f7;
+  border-bottom: 1px solid var(--border);
 }
 .dictionaryRow > span {
   min-width: 0;
   overflow-wrap: anywhere;
   font-size: 12px;
-  color: #7a8aa3;
+  color: var(--text-secondary);
   flex: 1;
 }
 .dictionaryRow > small {
-  color: #abb6c6;
+  color: var(--faint);
   font-size: 10px;
 }
 .dictionaryRow > button:last-child {
   font-size: 10px;
 }
 .inactive > span {
-  color: #b6bfcd;
+  color: var(--faint);
 }
 @media (min-width: 1600px) {
   .dashboardGrid {

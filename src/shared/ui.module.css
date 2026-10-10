@@ -6,7 +6,7 @@
   margin-bottom: 26px;
 }
 .eyebrow {
-  color: #99a7bc;
+  color: var(--faint);
   font-size: 9px;
   letter-spacing: 2px;
   font-weight: 600;
@@ -16,17 +16,17 @@
   font-size: 27px;
   line-height: 1.4;
   font-weight: 650;
-  color: #293850;
+  color: var(--text-strong);
   letter-spacing: -0.8px;
   outline: none;
 }
 .pageHeader p {
   margin-top: 9px;
-  color: #919eaf;
+  color: var(--faint);
   font-size: 12px;
 }
 .card {
-  background: white;
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
@@ -48,22 +48,22 @@
   flex-wrap: wrap;
 }
 .cardTitle > svg {
-  color: #8599b5;
+  color: var(--muted);
 }
 .cardTitle h2 {
   font-weight: 600;
   font-size: 14px;
-  color: #34445d;
+  color: var(--text-strong);
 }
 .cardTitle > span {
   font-size: 10px;
-  color: #a5afbe;
+  color: var(--faint);
   margin-left: 3px;
 }
 .stat {
   border-radius: var(--radius);
   border: 1px solid var(--border);
-  background: white;
+  background: var(--surface);
   padding: 20px 21px 18px;
   box-shadow: var(--shadow);
   min-width: 0;
@@ -72,7 +72,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: #929db0;
+  color: var(--faint);
   font-size: 11px;
 }
 .statTop svg {
@@ -81,23 +81,23 @@
   border-radius: 10px;
 }
 .blue .statTop svg {
-  background: #eff3fc;
-  color: #6a8ace;
+  background: var(--primary-soft);
+  color: var(--primary);
 }
 .green .statTop svg {
-  background: #eef7f2;
-  color: #72a891;
+  background: var(--green-soft);
+  color: var(--green);
 }
 .amber .statTop svg {
-  background: #faf5ec;
-  color: #bea16e;
+  background: var(--amber-soft);
+  color: var(--amber);
 }
 .violet .statTop svg {
-  background: #f2eff9;
-  color: #a08bc2;
+  background: var(--violet-soft);
+  color: var(--violet);
 }
 .statValue {
-  color: #34445d;
+  color: var(--text-strong);
   font-size: clamp(20px, 1.8vw, 28px);
   line-height: 1.4;
   font-weight: 650;
@@ -107,7 +107,7 @@
   overflow-wrap: anywhere;
 }
 .statDetail {
-  color: #a0aabd;
+  color: var(--faint);
   font-size: 10px;
   line-height: 1.7;
 }
@@ -115,7 +115,7 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  color: #93a4bf;
+  color: var(--faint);
   font-size: 10px;
   white-space: nowrap;
 }
@@ -137,17 +137,17 @@
   width: 47px;
   height: 47px;
   border-radius: 15px;
-  color: #b3c0d4;
-  background: #f5f8fd;
+  color: var(--decorative);
+  background: var(--surface-hover);
   margin-bottom: 14px;
 }
 .empty h3 {
-  color: #8998ad;
+  color: var(--muted);
   font-size: 12px;
   font-weight: 500;
 }
 .empty p {
-  color: #afb8c6;
+  color: var(--faint);
   font-size: 11px;
   margin: 6px 0 15px;
 }
@@ -160,13 +160,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #a7b3c4;
+  color: var(--faint);
   font-size: 12px;
 }
 .overlay {
   position: fixed;
   inset: 0;
-  background: #172b4a55;
+  background: var(--overlay);
   backdrop-filter: blur(3px);
   z-index: 90;
 }
@@ -179,10 +179,10 @@
   width: 520px;
   max-height: calc(100vh - 64px);
   overflow: auto;
-  background: white;
+  background: var(--surface);
   border-radius: 16px;
   padding: 26px 30px;
-  box-shadow: 0 24px 80px #19305433;
+  box-shadow: var(--modal-shadow);
 }
 .modalHeading {
   display: flex;
@@ -195,7 +195,7 @@
   font-weight: 650;
 }
 .description {
-  color: #93a0b2;
+  color: var(--faint);
   font-size: 12px;
   margin: 7px 0 24px;
 }
@@ -206,7 +206,7 @@
 .field label {
   display: block;
   font-size: 12px;
-  color: #65738b;
+  color: var(--text-secondary);
   margin-bottom: 7px;
   font-weight: 500;
 }
@@ -223,10 +223,10 @@
   padding-top: 20px;
 }
 .formError {
-  color: #b45460;
+  color: var(--danger);
   border-radius: 7px;
   padding: 10px 13px;
-  background: #fdf0f1;
+  background: var(--danger-soft);
   font-size: 12px;
 }
 .toast {
@@ -241,7 +241,7 @@
   z-index: 150;
   max-width: 760px;
   background: #314466;
-  color: #fff;
+  color: var(--inverse-text);
   border-radius: 9px;
   box-shadow: 0 8px 30px #27344926;
   font-size: 12px;
@@ -269,16 +269,16 @@
   font-size: 11px;
 }
 .distributionRow span {
-  color: #7e8da4;
+  color: var(--muted);
 }
 .distributionRow strong {
   font-size: 11px;
   font-weight: 600;
-  color: #647692;
+  color: var(--text-secondary);
 }
 .barTrack {
   height: 5px;
-  background: #f3f5f9;
+  background: var(--surface-muted);
   border-radius: 3px;
   overflow: hidden;
 }

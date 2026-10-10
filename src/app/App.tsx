@@ -10,6 +10,8 @@ import {
   Settings2,
   ArrowUpRight,
   HardDrive,
+  Moon,
+  Sun,
 } from 'lucide-react';
 import { DashboardPage } from '../features/dashboard/Dashboard';
 import { TodosPage } from '../features/todos/Todos';
@@ -21,12 +23,16 @@ import { TimerController } from '../features/study/Timer';
 import { UiProvider } from '../shared/UiProvider';
 import { useAppStore } from '../data/store';
 import { useToday } from '../shared/hooks';
+import { useTheme } from '../shared/theme';
+import { useUi } from '../shared/ui-context';
 import styles from './App.module.css';
 
 function WorkbenchLayout() {
   const location = useLocation();
   const problem = useAppStore((state) => state.problem);
   const today = useToday();
+  const { theme, toggleTheme } = useTheme();
+  const { notify } = useUi();
   useEffect(() => {
     window.scrollTo({ top: 0 });
   }, [location.pathname]);
@@ -109,6 +115,19 @@ function WorkbenchLayout() {
           <div>
             <span className={styles.statusDot} />
             保持自己的节奏 <span className={styles.topbarDate}>{today.replaceAll('-', '.')}</span>
+            <button
+              type="button"
+              className={styles.themeToggle}
+              aria-label={theme === 'light' ? '切换到暗色模式' : '切换到亮色模式'}
+              title={theme === 'light' ? '切换到暗色模式' : '切换到亮色模式'}
+              onClick={() => {
+                if (!toggleTheme())
+                  notify('外观已切换，但偏好未能保存；刷新后可能恢复原来的外观。', true);
+              }}
+            >
+              {theme === 'light' ? <Moon size={15} /> : <Sun size={15} />}
+              <span>{theme === 'light' ? '暗色模式' : '亮色模式'}</span>
+            </button>
           </div>
         </div>
         <main id="main" tabIndex={-1} className={styles.main}>
