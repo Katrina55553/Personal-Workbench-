@@ -27,6 +27,7 @@ import { financeStats, money } from '../finance/stats';
 import { studyStats, duration } from '../study/stats';
 import { StudyChart } from '../study/Study';
 import { TimerCard } from '../study/Timer';
+import { WeatherCard } from '../weather/Weather';
 import type { EditorRequest } from '../../shared/ui-context';
 import styles from '../features.module.css';
 
@@ -172,6 +173,7 @@ export function DashboardPage() {
           </Card>
         </div>
         <div className="stack">
+          <WeatherCard />
           <TimerCard />
           <Card title="快速记录" icon={Plus}>
             <div className={styles.quickGrid}>
